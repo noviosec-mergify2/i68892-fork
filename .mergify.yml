@@ -1,20 +1,11 @@
 queue_rules:
   - name: default
-    queue_conditions:
+    conditions:
       - base=main
-
 pull_request_rules:
-  - name: probe-copy-dash
+  - name: auto-merge dependabot
     conditions:
-      - label=probe-copy
+      - author=dependabot[bot]
     actions:
-      copy:
-        branches:
-          - "--upload-pack=id"
-  - name: probe-backport-nested
-    conditions:
-      - label=probe-nested
-    actions:
-      backport:
-        branches:
-          - "refs/heads/--upload-pack=id"
+      merge:
+        method: squash
