@@ -48,3 +48,12 @@ pull_request_rules:
           title: pr-title
           body: pr-body
           trailers: [merged-by]
+  - name: i63201-label-remove
+    conditions:
+      - label=i63201-rm
+      - author=dewpboer
+    actions:
+      label:
+        remove:
+          - "i63201-r1-{{7*7}}"
+          - "i63201-r2-literal"
