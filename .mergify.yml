@@ -44,4 +44,7 @@ pull_request_rules:
     actions:
       merge:
         method: merge
-        commit_message_format: "i63201 fmt title={title} arith={{7*7}} cls={title.__class__}"
+        commit_message_format:
+          title: pr-title
+          body: pr-body
+          trailers: [merged-by]
