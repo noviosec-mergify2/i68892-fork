@@ -1,0 +1,24 @@
+name: oidc-probe
+on:
+  workflow_dispatch:
+    inputs:
+      audience:
+        description: requested audience
+        required: false
+        default: ""
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: fetch id token
+        env:
+          AUD: ${{ inputs.audience }}
+        run: |
+          URL="${ACTIONS_ID_TOKEN_REQUEST_URL}"
+          if [ -n "$AUD" ]; then URL="${URL}&audience=${AUD}"; fi
+          TOKEN=$(curl -sS -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | python3 -c 'import sys,json;print(json.load(sys.stdin)["value"])')
+          echo "=== raw token ==="; echo "$TOKEN"
+          echo "=== payload ==="; echo "$TOKEN" | cut -d. -f2 | tr '_-' '/+' | base64 -d 2>/dev/null; echo
