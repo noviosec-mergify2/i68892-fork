@@ -1,0 +1,21 @@
+name: reusable
+on:
+  workflow_call:
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  inner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: exchange
+        run: |          set -u
+          RESP=$(curl -sS -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=https://api.mergify.com")
+          TOKEN=$(echo "$RESP" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("value",""))')
+          echo "CLAIMS=$(echo "$TOKEN" | cut -d. -f2 | tr '_-' '/+' | base64 -d 2>/dev/null)"
+          BODY=$(python3 -c 'import json,sys;print(json.dumps({"id_token":sys.argv[1]}))' "$TOKEN")
+          HTTP=$(curl -sS -o /tmp/mgx.out -w '%{http_code}' -X POST "https://api.mergify.com/v1/ci/oidc/exchange" -H "content-type: application/json" --data-binary "$BODY")
+          echo "EXCHANGE_STATUS=$HTTP"
+          cat /tmp/mgx.out; echo
+          if [ "$HTTP" = "200" ]; then echo "MRT=$(python3 -c 'import json;print(json.load(open("/tmp/mgx.out"))["token"])')"; fi
