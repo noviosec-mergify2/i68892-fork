@@ -1,5 +1,7 @@
 queue_rules:
   - name: default
+    conditions:
+      - base=main
 pull_request_rules:
   - name: auto-merge dependabot
     conditions:
