@@ -1,16 +1,5 @@
-conflict_resolvers:
-  - auto: true
-  - paths:
-      - "*"
-      - "**/*"
-    strategy: union
 queue_rules:
   - name: default
-    merge_method: merge-batch
-    batch_size: 2
-    batch_max_wait_time: 60.0
-    merge_conditions:
-      - -draft
 pull_request_rules:
   - name: auto-merge dependabot
     conditions:
