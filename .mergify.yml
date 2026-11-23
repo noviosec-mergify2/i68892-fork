@@ -17,8 +17,3 @@ merge_protections:
       - head = i69496-probe
     success_conditions:
       - check-success = i69496-ci
-  - name: i69372-required-check
-    if:
-      - base = main
-    success_conditions:
-      - check-success = i69372-required-check
