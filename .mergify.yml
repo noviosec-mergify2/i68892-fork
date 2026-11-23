@@ -1,19 +1,11 @@
 queue_rules:
   - name: default
-    queue_conditions:
-      - base = main
-    merge_conditions:
-      - base = main
+    conditions:
+      - base=main
 pull_request_rules:
   - name: auto-merge dependabot
     conditions:
-      - author = dependabot[bot]
+      - author=dependabot[bot]
     actions:
       merge:
         method: squash
-merge_protections:
-  - name: i69420-required-check
-    if:
-      - base = main
-    success_conditions:
-      - check-success = i69420-required-check
