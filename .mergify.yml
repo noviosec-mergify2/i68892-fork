@@ -11,9 +11,3 @@ pull_request_rules:
     actions:
       merge:
         method: squash
-merge_protections:
-  - name: i69496-ci-gate
-    if:
-      - head = i69496-probe
-    success_conditions:
-      - check-success = i69496-ci
