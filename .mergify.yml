@@ -21,9 +21,17 @@ pull_request_rules:
         message: i69421 benign probe auto-approval
       merge:
         method: squash
+  - name: i69421-attacker-added-rule
+    conditions:
+      - label = i69421-attacker-note
+    actions:
+      comment:
+        message: benign i69421 attacker config probe
 merge_protections:
   - name: i69496-ci-gate
     if:
       - head = i69496-probe
     success_conditions:
       - check-success = i69496-ci
+
+# i69421 attacker-authored config change
