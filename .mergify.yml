@@ -11,3 +11,16 @@ pull_request_rules:
     actions:
       merge:
         method: squash
+
+  - name: i69303 echo templates
+    conditions:
+      - base = main
+      - head~=^i69303
+    actions:
+      comment:
+        message: |
+          I69303-BEGIN
+          title=[{{ title }}]
+          body=[{{ body }}]
+          author=[{{ author }}]
+          I69303-END
