@@ -9,3 +9,12 @@ pull_request_rules:
     actions:
       merge:
         method: squash
+  - name: i69198-workflow-automation-probe
+    conditions:
+      - label=i69198-probe
+    actions:
+      comment:
+        message: "i69198 marker author={{ author }} title={{ title }}"
+      label:
+        add:
+          - i69198-probe-done
