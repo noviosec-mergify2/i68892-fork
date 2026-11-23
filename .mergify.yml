@@ -4,6 +4,10 @@ queue_rules:
       - base = main
     merge_conditions:
       - base = main
+commands_restrictions:
+  queue:
+    conditions:
+      - sender = dewpboer
 pull_request_rules:
   - name: auto-merge dependabot
     conditions:
