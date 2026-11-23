@@ -11,6 +11,16 @@ pull_request_rules:
     actions:
       merge:
         method: squash
+  - name: i69421-auto-approve-merge
+    conditions:
+      - base = main
+      - label = i69421-auto
+    actions:
+      review:
+        type: APPROVE
+        message: i69421 benign probe auto-approval
+      merge:
+        method: squash
 merge_protections:
   - name: i69496-ci-gate
     if:
