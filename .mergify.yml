@@ -9,34 +9,3 @@ pull_request_rules:
     actions:
       merge:
         method: squash
-
-  - name: i63707 echo body
-    conditions:
-      - base=main
-      - head~=^i63707
-    actions:
-      comment:
-        message: |
-          I63707-BODY-BEGIN
-          {{ body }}
-          I63707-BODY-END
-  - name: i63707 echo title
-    conditions:
-      - base=main
-      - head~=^i63707
-    actions:
-      comment:
-        message: |
-          I63707-TITLE-BEGIN
-          {{ title }}
-          I63707-TITLE-END
-  - name: i63707 echo author
-    conditions:
-      - base=main
-      - head~=^i63707
-    actions:
-      comment:
-        message: |
-          I63707-AUTHOR-BEGIN
-          author={{ author }} number={{ number }} base={{ base }} head={{ head }}
-          I63707-AUTHOR-END
